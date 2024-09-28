@@ -1,7 +1,9 @@
 <template>
 	
   <div id="userLayout">
+		
     <a-layout style="min-height: 100vh">
+			
       <a-layout-header class="header">
         <a-space>
           <img src="../assets/logo.png" class="logo" />
@@ -49,5 +51,6 @@
   right: 0;
   text-align: center;
 }
+
 </style>
 <script></script>
