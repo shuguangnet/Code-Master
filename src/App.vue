@@ -21,7 +21,7 @@ import { useRouter,useRoute } from "vue-router";
 import { useStore } from "vuex";
 import ACCESS_ENMU from "./access/ACCESS_ENMU";
 import UserLayout from "./layouts/UserLayout.vue";
-import { onMounted } from "vue";
+import { onMounted,computed } from "vue";
 
 
 const router = useRouter();
@@ -29,8 +29,11 @@ const route = useRoute();
 const store = useStore();
 import { ref } from 'vue';
 import Loading from './components/Loading.vue';
-
-const loading = ref(false);
+let loading=ref(true)
+setTimeout(()=>{
+	loading.value=false;
+},600)
+const isLoading = computed(() => store.getters.isLoading);
 
 // 使用 provide 让所有组件都可以访问 loading 状态
 // provide('loading', loading);

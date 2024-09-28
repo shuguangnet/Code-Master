@@ -1,20 +1,20 @@
 <!-- Loading.vue -->
 <template>
   <div v-if="loading" class="loading-overlay">
-    <!-- Customize loading animation here -->
-    <div class="loading-spinner"></div>
+    <a-spin tip="加载中，请等待..." />
   </div>
 </template>
 
-<script setup>
-import { defineProps, withDefaults } from 'vue';
+<script setup lang="ts">
+import { defineProps } from 'vue';
 
-const props = defineProps(['show'])
-// const props = defineProps({
-//   show: Boolean // 接收父组件传递的 show 属性
-// });
-
-console.log("Loading",props)
+// 从父组件传递的显示 `loading` 的 `props`
+const props = defineProps({
+  loading: {
+    type: Boolean,
+    required: true,
+  },
+});
 </script>
 
 <style scoped>
@@ -22,26 +22,12 @@ console.log("Loading",props)
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  width: 100vw;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.7);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 9999;
-}
-
-.loading-spinner {
-  border: 4px solid rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  border-top: 4px solid #ffffff;
-  width: 40px;
-  height: 40px;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
 }
 </style>

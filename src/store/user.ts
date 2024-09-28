@@ -9,7 +9,11 @@ export default {
     loginUser: {
       userName: "未登录"
     },
+		loading: false,
   }),
+	getters: {
+    isLoading: (state) => state.loading,
+  },
   actions: {
     async getLoginUser({ commit, state }, payload) {
       // 从远程请求获取登录信息
@@ -23,10 +27,19 @@ export default {
         });
       }
     },
+		showLoading({ commit }) {
+      commit('setLoading', true);
+    },
+    hideLoading({ commit }) {
+      commit('setLoading', false);
+    },
   },
   mutations: {
     updateUser(state, payload) {
       state.loginUser = payload;
+    },
+		setLoading(state, value: boolean) {
+      state.loading = value;
     },
   },
 } as StoreOptions<any>;
