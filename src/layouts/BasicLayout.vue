@@ -942,7 +942,7 @@
       <router-view />
     </a-layout-content>
     <!-- 底部 -->
-    <a-layout-footer class="footer">By 曙光 shuguangwl.com</a-layout-footer>
+    <a-layout-footer class="footer" style=" background-color: var(--background-color);color: var(--text-color);">By 曙光 shuguangwl.com</a-layout-footer>
   </a-layout>
 </template>
 <script setup lang="ts">

@@ -1,5 +1,5 @@
 <template>
-  <div >
+  <div style=" background-color: var(--background-color);color: var(--text-color);">
     <a-row id="globalHeader" align="center" :wrap="false">
       <a-col flex="auto">
         <a-menu
@@ -118,6 +118,7 @@ let mode=ref(1)
 const drak=()=>{
 mode.value=0
 document.body.setAttribute('arco-theme', 'dark')
+document.body.classList.add('dark-theme'); // 添加暗色主题类
 
 // // 恢复亮色主题
 // document.body.removeAttribute('arco-theme');
@@ -125,6 +126,7 @@ document.body.setAttribute('arco-theme', 'dark')
 const day=()=>{
 mode.value=1
 // // 恢复亮色主题
+document.body.classList.remove('dark-theme'); // 移除暗色主题类
 document.body.removeAttribute('arco-theme');
 }
 const logout=async()=>{

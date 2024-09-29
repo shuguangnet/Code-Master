@@ -4,7 +4,7 @@
   <link rel="stylesheet" type="text/css" href="https://auth.idcbook.com/template/assets/home/shiwaiyun/static/common.css">
   <link rel="stylesheet" type="text/css" href="https://auth.idcbook.com/template/assets/home/shiwaiyun/static/index.css">
 
-  
+    <div style=" background-color: var(--background-color);color: var(--text-color);">
     <!-- 页面主要内容 -->
     <div>
       <!-- banner 菜单开始 -->
@@ -90,7 +90,7 @@
       <!-- 优势部分结束 -->
 
       <!-- 开始使用部分 -->
-      <div class="start-box">
+      <div class="start-box" style=" background-color: var(--background-color);color: var(--text-color);">
         <div class="auto-width join-apy-wrap sm-p-lr-15">
           <div class="text-content" layout-align="space-between center">
             <div class="bdr-5 font-size-18 font-weight-bold">
@@ -157,6 +157,7 @@
       <UserRegView @goToLogin ="UserModel" :ModelStatus="ModelStatus" />
 	  </div>
   </div>
+</div>
 </div>
 </template>
 
@@ -306,7 +307,7 @@ const handleCancel = () => {
   height: 30px;
   line-height: 30px;
   text-align: center;
-  background-color: #ffffff;
+	background-color: var(--background-color);
   border-radius: 5px;
   border: solid 1px #05f;
   color: #05f;

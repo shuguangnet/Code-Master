@@ -120,7 +120,8 @@ const paginationProps=reactive({
   margin: 0 4px;
 }
 .header {
-  background: #ffffff;
+	background-color: var(--background-color);
+  color: var(--text-color);
   padding: 0 20px;
   display: flex;
   align-items: center;
@@ -141,17 +142,20 @@ const paginationProps=reactive({
 }
 
 .sidebar {
-  background: #ffffff;
+	background-color: var(--background-color);
+  color: var(--text-color);
   border-radius: 8px;
 }
 
 .post-list {
-  background: #ffffff;
+	background-color: var(--background-color);
+  color: var(--text-color);
   border-radius: 8px;
 }
 .footer {
   text-align: center;
   padding: 10px;
-  background: #ffffff;
+	background-color: var(--background-color);
+  color: var(--text-color);
 }
 </style>

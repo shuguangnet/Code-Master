@@ -4,7 +4,7 @@ import store from "./store";
 import ArcoVue from "@arco-design/web-vue";
 import App from "./App.vue";
 import "@arco-design/web-vue/dist/arco.css";
-import axios from 'axios'
+import '@/assets/style.css'
 import '@/access'
 // 额外引入图标库
 import ArcoVueIcon from '@arco-design/web-vue/es/icon';

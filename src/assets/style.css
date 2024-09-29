@@ -1,0 +1,11 @@
+:root {
+  --primary-color: #0055ff; /* 亮色主题主色 */
+  --background-color: #ffffff; /* 亮色背景 */
+  --text-color: #333333; /* 亮色文字颜色 */
+}
+
+.dark-theme {
+  --primary-color: #0a65cc; /* 暗色主题主色 */
+  --background-color: #1e1e1e; /* 暗色背景 */
+  --text-color: #ffffff; /* 暗色文字颜色 */
+}
