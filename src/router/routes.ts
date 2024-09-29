@@ -115,13 +115,13 @@ export const routes: Array<RouteRecordRaw> = [
 					icon:IconComputer
 				},
 			},{
-				path: "/history/question/",
+				path: "/forum/index/",
 				name: "交流论坛",
-				component: () => import("../views/question/SubmitQuestion.vue"),
+				component: () => import("../views/forum/ForumView.vue"),
 				meta: {
 					hidden: false,
 					access: ACCESS_ENMU.NOT_LOGIN,
-					meta:IconUserGroup
+					icon:IconUserGroup
 				},
 			},
 			{
@@ -142,6 +142,13 @@ export const routes: Array<RouteRecordRaw> = [
 				path: "/user/center",
 				name: "用户中心",
 				component: () => import("../views/user/UserCenter.vue"),
+				meta:{
+					hidden: true,
+				}
+			},{
+				path: "/forum/publish",
+				name: "发布帖子",
+				component: () => import("../views/forum/ForumPublish.vue"),
 				meta:{
 					hidden: true,
 				}
