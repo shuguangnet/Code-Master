@@ -147,23 +147,29 @@
         </div>
       </div>
     </div>
-  
-
-  
   <!-- 登录弹框 -->
-  <a-modal v-model:visible="visible" @cancel="handleCancel" :footer="null" >
-    <UserLoginView />
-  </a-modal>
+	<div v-if="visible" class="overlay" @click.self="handleCancel" >
+  <div class="login-container">
+		<div v-if="ModelInfo=='login'">
+      <UserLoginView @goToReg ="UserModel" :ModelStatus="ModelStatus" />
+	  </div>
+		<div v-else-if="ModelInfo=='reg'">
+      <UserRegView @goToLogin ="UserModel" :ModelStatus="ModelStatus" />
+	  </div>
+  </div>
+</div>
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue';
 import UserLoginView from './user/UserLoginView.vue';
-
+import UserRegView from './user/UserRegView.vue';
 const Mdvalue = ref<string>('');
-
+const ModelStatus = ref('card'); // 传递的状态
 const Codevalue = ref<string>('');
-
+// 控制弹框显示/隐藏
+const visible = ref(false);
+const ModelInfo=ref('login')
 const OnChange = (v: string) => {
   Mdvalue.value = v;
   console.log(Mdvalue.value);
@@ -173,14 +179,16 @@ const InChnage = (v: string) => {
   Codevalue.value = v;
   console.log(Codevalue.value);
 };
-// 控制弹框显示/隐藏
-const visible = ref(false);
 
 // 打开登录框
 const useLogin = () => {
   visible.value = true;
 };
-
+const UserModel = (msg: string) => {
+	ModelInfo.value=msg
+  console.log("收到子组件传来的消息: ", msg);
+  // 处理跳转或其他操作
+};
 // 关闭登录框
 const handleCancel = () => {
   visible.value = false;
@@ -196,7 +204,39 @@ const handleCancel = () => {
   justify-content: center;
   align-items: center;
 }
+/* 遮罩层样式 */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* 半透明背景 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* 确保遮罩层位于最顶层 */
+}
 
+/* 弹窗样式 */
+.login-container {
+  /* background: #0055ff; */
+	/* border-radius: 25px; */
+  /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); */
+  /* animation: fadeIn 0.3s ease; 添加淡入动画 */
+}
+
+/* 淡入动画效果 */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 /* 打字机动画效果 */
 @keyframes typing {
   from {

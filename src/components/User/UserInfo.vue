@@ -1,7 +1,9 @@
 <template>
- <div class="info">
-					<div class="avatar" style="display: flex;justify-content: center;">
-          <a-avatar id="userAvatar" @click="onClcik" :style="{ backgroundColor: '#0A65CC' }">
+ <div class="info" style="align-items: center;">
+					<div class="avatar" style="display: flex;justify-content: center;align-items: center;width: 50%;">
+        
+					<a-avatar :size="100"  id="userAvatar" @click="onClcik" :style="{ backgroundColor: '#0A65CC' }">
+				 
             <img v-if="form.userAvatar" class="avatar-image" alt="avatar" :src="form.userAvatar" />
             <IconUser v-else />
             <template #trigger-icon>

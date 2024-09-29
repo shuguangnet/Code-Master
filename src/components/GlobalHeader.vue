@@ -62,7 +62,7 @@
 				<!-- <p>已登录</p> -->
 			 </a-avatar>
          <template #content>
-          <a-doption>
+          <a-doption @click="gotoCenter()">
 						<a-button type="text">
 							<icon-user style=" font-size: 20px;" />
 							个人中心
@@ -167,7 +167,10 @@ const doMenuClick = (key: string) => {
     path: key,
   });
 };
-
+// 跳转到用户中心
+const gotoCenter=()=>{
+	router.push('/user/center')
+}
 </script>
 
 <style>

@@ -37,46 +37,79 @@
           </a-button>
         </a-form-item>
       </a-form>
+      <!-- 底部链接 -->
+      <div class="bottom-text">没有账号？<a @click="goToReg">请注册</a></div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { reactive } from "vue";
-import { UserControllerService, UserLoginRequest } from "../../../generated";
-import message from "@arco-design/web-vue/es/message";
-import { useRouter } from "vue-router";
-import { useStore } from "vuex";
+import { reactive, defineEmits, ref, defineProps, withDefaults } from 'vue';
+import { UserControllerService, UserLoginRequest } from '../../../generated';
+import message from '@arco-design/web-vue/es/message';
+import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 
 /**
  * 表单信息
  */
 const form = reactive({
-  userAccount: "",
-  userPassword: "",
+  userAccount: '',
+  userPassword: '',
 } as UserLoginRequest);
 
+// 初始化路由和状态管理
 const router = useRouter();
 const store = useStore();
 
+// 记录用户模式（登录或注册）
+const userModelInfo = ref('user');
+
+// 定义自定义事件
+const emit = defineEmits(['goToReg']);
+
+// 定义 props 并设置默认值
+const props = withDefaults(
+  defineProps<{
+    ModelStatus?: string;
+  }>(),
+  {
+    ModelStatus: 'page',
+  }
+);
+
+// 输出接收到的 ModelStatus 以进行调试
+console.log('接收到的 ModelStatus:', props.ModelStatus);
+
+/**
+ * 跳转到注册页面
+ */
+const goToReg = () => {
+  userModelInfo.value = 'reg';
+  emit('goToReg', userModelInfo.value); // 发送事件到父组件
+  
+  // 判断 ModelStatus，决定是否跳转
+  if (props.ModelStatus !== 'card') {
+    router.push('/user/reg'); // 执行跳转
+  }
+};
+
 /**
  * 提交表单
- * @param data
  */
 const handleSubmit = async () => {
   const res = await UserControllerService.userLoginUsingPost(form);
+  
   // 登录成功，跳转到主页
   if (res.code === 0) {
-    await store.dispatch("user/getLoginUser");
-    router.push({
-      path: "/question",
-      replace: true,
-    });
+    await store.dispatch('user/getLoginUser');
+    router.push({ path: '/question', replace: true });
   } else {
-    message.error("登陆失败，" + res.message);
+    message.error('登录失败，' + res.message); // 登录失败的提示
   }
 };
 </script>
+
 
 <style scoped>
 /* 样式优化 */
@@ -84,8 +117,7 @@ const handleSubmit = async () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  
- 
+
   padding: 20px;
 }
 
@@ -111,7 +143,16 @@ h2 {
   flex-direction: column;
   gap: 16px;
 }
+/* 底部文本样式 */
+.bottom-text {
+  text-align: center;
+  margin-top: 16px;
+}
 
+.bottom-text a {
+  color: #0052d9;
+  cursor: pointer;
+}
 .login-button {
   width: 100%;
 }
