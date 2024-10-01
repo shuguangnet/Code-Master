@@ -1,7 +1,7 @@
 <template>
   <div class="forum-publish">
     <h1>发布新帖子</h1>
-    <a-form :model="form" layout="vertical" @submit="handleSubmit">
+    <a-form :model="form" layout="vertical" >
       <a-form-item
         label="标题"
         field="title"
@@ -22,7 +22,7 @@
         />
       </a-form-item>
 
-      <a-button type="primary" html-type="submit">发布</a-button>
+      <a-button type="primary" html-type="submit" @click="handleSubmit">发布</a-button>
     </a-form>
     
     <a-message v-if="message" :type="messageType" :content="message" />
@@ -31,11 +31,13 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
+import { PostControllerService } from "../../../generated";
 import { Message } from '@arco-design/web-vue';
 
 const form = ref({
   title: '',
-  content: ''
+  content: '',
+	tags:["组队"]
 });
 
 const message = ref('');
@@ -54,15 +56,11 @@ const handleSubmit = async (event: Event) => {
   // 这里可以添加 API 调用
   try {
     // 假设这是一个异步操作，比如调用 API
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    
+    let res=await PostControllerService.addPostUsingPost(form.value)
     // 提交成功
-    message.value = '帖子发布成功！';
-    messageType.value = 'success';
-    
-    // 重置表单
-    form.value.title = '';
-    form.value.content = '';
+   if(res.code==0){
+		alert("发布成功")
+	 }
   } catch (error) {
     message.value = '发布帖子失败，请稍后重试';
     messageType.value = 'error';

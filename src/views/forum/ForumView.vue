@@ -1,161 +1,204 @@
 <template>
-  <div class="forum-home">
-    <!-- 顶部导航栏 -->
-    <a-layout>
-     
+  <div class="forum-container">
+    <!-- 侧边栏 -->
+		<aside class="sidebar" style="color: var(--text-color);">
+  <h3 class="sidebar-title" style="color: var(--text-color);">分类</h3>
+  <ul class="category-list" style="color: var(--text-color);">
+    <li
+      v-for="category in categories"
+      :key="category.id"
+      @click="selectCategory(category)"
+      :class="{ active: selectedCategory && selectedCategory.id === category.id }"
+    >
+      {{ category.name }}
+    </li>
+  </ul>
+</aside>
 
-      <a-layout-content>
-        <div class="content">
-          <a-row gutter={24}>
-            <!-- 侧边栏 -->
-            <a-col span="6">
-              <a-card title="分类" class="sidebar">
-                <a-menu mode="inline" theme="light">
-                  <a-menu-item key="category1">分类 1</a-menu-item>
-                  <a-menu-item key="category2">分类 2</a-menu-item>
-                  <a-menu-item key="category3">分类 3</a-menu-item>
-                </a-menu>
-              </a-card>
-            </a-col>
 
-            <!-- 主内容区域 -->
-						<a-list
-    class="list-demo-action-layout"
-    :bordered="false"
-    :data="dataSource"
-    :pagination-props="paginationProps"
-  >
-    <template #item="{ item }">
-      <a-list-item class="list-demo-item" action-layout="vertical">
-        <template #actions>
-          <span><icon-heart />83</span>
-          <span><icon-star />{{ item.index }}</span>
-          <span><icon-message />Reply</span>
+    <!-- 主内容区域 -->
+    <main class="main-content">
+      <a-list
+        class="list-demo-action-layout"
+        :bordered="false"
+        :data="dataSource"
+        :pagination-props="paginationProps"
+      >
+        <template #item="{ item }">
+          <a-list-item class="list-demo-item" action-layout="vertical" style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
+           
+						<template #actions>
+              <span><icon-heart />{{ item.thumbNum }}</span>
+              <span><icon-star />{{ item.favourNum }}</span>
+              <span><icon-message />收藏</span>
+            </template>
+						<template #content>
+              <div class="content-area">
+               你好你好你好你好你好你好你好你好你好你好你好你好你好你好
+              </div>
+            </template>
+            <template #extra>
+              <div class="image-area">
+                <img alt="arco-design" :src="item.imageSrc || `https://api.miaomc.cn/image/get?${Math.random()}`" />
+
+              </div>
+            </template>
+            <a-list-item-meta :title="item.title" :description="item.content">
+              <template #avatar>
+                <a-avatar shape="square">
+                  <img alt="avatar" :src="item.user.userAvatar" />
+                </a-avatar>
+              </template>
+            </a-list-item-meta>
+          </a-list-item>
         </template>
-        <template #extra>
-          <div className="image-area">
-            <img alt="arco-design" :src="item.imageSrc" />
-          </div>
-        </template>
-        <a-list-item-meta
-          :title="item.title"
-          :description="item.description"
-        >
-          <template #avatar>
-            <a-avatar shape="square">
-              <img alt="avatar" :src="item.avatar" />
-            </a-avatar>
-          </template>
-        </a-list-item-meta>
-      </a-list-item>
-    </template>
-  </a-list>
-          </a-row>
-        </div>
-      </a-layout-content>
-
-      
-    </a-layout>
+      </a-list>
+    </main>
   </div>
 </template>
 
-<script lang="ts" setup>
-import { ref,reactive } from 'vue';
-import { useRouter } from 'vue-router';
-const names = ['Socrates', 'Balzac', 'Plato'];
-const avatarSrc = [
-  '//p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp',
-  '//p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/e278888093bef8910e829486fb45dd69.png~tplv-uwbnlip3yd-webp.webp',
-  '//p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/9eeb1800d9b78349b24682c3518ac4a3.png~tplv-uwbnlip3yd-webp.webp',
-];
-const imageSrc = [
-  '//p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/29c1f9d7d17c503c5d7bf4e538cb7c4f.png~tplv-uwbnlip3yd-webp.webp',
-  '//p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/04d7bc31dd67dcdf380bc3f6aa07599f.png~tplv-uwbnlip3yd-webp.webp',
-  '//p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/1f61854a849a076318ed527c8fca1bbf.png~tplv-uwbnlip3yd-webp.webp',
-];
+<script setup>
+import { ref, reactive, onMounted } from 'vue';
+import { PostControllerService } from '../../../generated'; // 假设你有这个服务文件
 
-const dataSource = new Array(15).fill(null).map((_, index) => {
-  return {
-    index: index,
-    avatar: avatarSrc[index % avatarSrc.length],
-    title: names[index % names.length],
-    description:
-      'Beijing ByteDance Technology Co., Ltd. is an enterprise located in China. ByteDance has products such as TikTok, Toutiao, volcano video and Douyin (the Chinese version of TikTok).',
-    imageSrc: imageSrc[index % imageSrc.length],
-  };
+// 请求返回的文章数据
+const article = ref([]); // 存放获取的文章数据
+
+// 存放分类信息
+const categories = ref([
+  { id: 1, name: "所有文章" },
+  { id: 2, name: "前端开发" },
+  { id: 3, name: "后端开发" },
+  { id: 4, name: "全栈开发" },
+]); // 这里是示例数据，替换为真实分类数据
+
+const selectedCategory = ref(null); // 当前选中的分类
+
+// 分页数据
+const paginationProps = reactive({
+  defaultPageSize: 3,
+  total: 0,
+  current: 1,
+  onChange: (page) => fetchData(page), // 页码变化时重新获取数据
 });
-const paginationProps=reactive({
-        defaultPageSize: 3,
-        total: dataSource.length
-      })
+const getRandomImg=()=>{return }
+// 获取文章列表数据
+const fetchData = async (page = 1) => {
+  try {
+    const res = await PostControllerService.listPostVoByPageUsingPost({
+      current: page,
+      pageSize: paginationProps.defaultPageSize,
+      categoryId: selectedCategory.value ? selectedCategory.value.id : null, // 如果有选中分类，则按分类过滤
+    });
+    if (res.code === 0) {
+      // 设置文章数据
+      article.value = res.data.records.map((item) => ({
+        ...item,
+        imageSrc: item.imageSrc || `https://api.miaomc.cn/image/get?${Math.random()}`,
+      }));
+      paginationProps.total = res.data.total; // 设置总条目数
+    }
+  } catch (error) {
+    console.error('数据获取失败:', error);
+  }
+};
+
+// 初始化时加载数据
+onMounted(() => {
+  fetchData();
+});
+
+// 切换分类
+const selectCategory = (category) => {
+  selectedCategory.value = category;
+  fetchData(); // 切换分类时重新获取数据
+};
+
+// dataSource 是要绑定到列表的数据
+const dataSource = article;
 </script>
 
 <style scoped>
-.forum-home {
-  /* background-color: #f0f2f5; 背景颜色 */
-}
-.list-demo-action-layout {
-  width: 60%;
-  
-  border-radius: 2px;
-  overflow: hidden;
-}
-.list-demo-action-layout .image-area {
-  width: 183px;
-  height: 119px;
-  border-radius: 2px;
-  overflow: hidden;
-}
-
-.list-demo-action-layout .list-demo-item {
-  padding: 20px 0;
-  border-bottom: 1px solid var(--color-fill-3);
-}
-
-.list-demo-action-layout .image-area img {
-  width: 100%;
-}
-
-.list-demo-action-layout .arco-list-item-action .arco-icon {
-  margin: 0 4px;
-}
-.header {
-	background-color: var(--background-color);
-  color: var(--text-color);
-  padding: 0 20px;
+/* 布局样式 */
+.forum-container {
   display: flex;
-  align-items: center;
+  padding: 20px;
+  gap: 20px;
+	color:--text-color;
 }
 
-.logo {
-  font-size: 24px;
-  font-weight: bold;
-  margin-right: 20px;
-}
-
-.nav-menu {
-  flex-grow: 1;
-}
-
-.content {
-  padding: 80px;
-}
-
+/* 侧边栏样式 */
 .sidebar {
-	background-color: var(--background-color);
-  color: var(--text-color);
+	
+  flex: 0 0 200px;
+  background-color: --background-color;
+  padding: 15px;
   border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	border: 0.5px solid #fff;
 }
 
-.post-list {
-	background-color: var(--background-color);
-  color: var(--text-color);
-  border-radius: 8px;
+.sidebar-title {
+	
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
 }
-.footer {
-  text-align: center;
-  padding: 10px;
-	background-color: var(--background-color);
-  color: var(--text-color);
+
+.category-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.category-list li {
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.category-list li:hover {
+  background-color: #d8d8d8;
+}
+
+.category-list li.active {
+  background-color: #1890ff;
+  color: white;
+}
+
+/* 主内容区域样式 */
+.main-content {
+  flex: 1;
+}
+
+.list-demo-action-layout {
+  background-color: --background-color;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.list-demo-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.image-area {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 150px;
+  height: 150px;
+  overflow: hidden;
+  border-radius: 8px;
+  border: 1px solid #e5e5e5;
+  margin-left: 10px;
+}
+
+.image-area img {
+  max-width: 100%;
+  max-height: 100%;
 }
 </style>
