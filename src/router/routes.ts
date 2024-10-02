@@ -123,6 +123,15 @@ export const routes: Array<RouteRecordRaw> = [
 					access: ACCESS_ENMU.NOT_LOGIN,
 					icon:IconUserGroup
 				},
+			},{
+				path: "/forum/post/:id",
+				name: "帖子详细",
+				component: () => import("../views/forum/PostDetail.vue"),
+				meta: {
+					hidden: true,
+					access: ACCESS_ENMU.NOT_LOGIN,
+					icon:IconUserGroup
+				},
 			},
 			{
 				path: "/noauth",

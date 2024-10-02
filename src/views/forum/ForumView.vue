@@ -32,16 +32,16 @@
         <template #item="{ item }">
           <a-list-item class="list-demo-item" action-layout="vertical" style="display: flex;
     flex-direction: row;justify-content: center;
-    align-items: center;">
+    align-items: center;" @click="PostDetail(item.id)">
             <template #actions>
               <span><icon-heart />{{ item.thumbNum }}</span>
               <span><icon-star />{{ item.favourNum }}</span>
               <span><icon-message />收藏</span>
             </template>
             <template #extra>
-              <div class="image-area">
+              <!-- <div class="image-area">
                 <img alt="arco-design" :src="item.imageSrc || `https://api.miaomc.cn/image/get?${Math.random()}`" />
-              </div>
+              </div> -->
             </template>
             <a-list-item-meta :title="item.title" :description="item.content">
               <template #avatar>
@@ -85,11 +85,12 @@
 import { ref, reactive, onMounted } from 'vue';
 import { PostControllerService } from '../../../generated'; // 假设你有这个服务文件
 import MdEditor from '@/components/MdEditor.vue'
+import { useRouter } from 'vue-router';
 // 请求返回的文章数据
 const article = ref([]); // 存放获取的文章数据
 // 请求返回的文章数据
 const isSidebarHidden = ref(false); // 控制侧边栏的显示与隐藏
-
+const router=useRouter()
 // 切换侧边栏显示/隐藏
 const toggleSidebar = () => {
   isSidebarHidden.value = !isSidebarHidden.value;
@@ -106,7 +107,7 @@ const selectedCategory = ref(null); // 当前选中的分类
 
 // 分页数据
 const paginationProps = reactive({
-  defaultPageSize: 3,
+  defaultPageSize: 5,
   total: 0,
   current: 1,
   onChange: (page) => fetchData(page), // 页码变化时重新获取数据
@@ -133,7 +134,10 @@ const fetchData = async (page = 1) => {
     console.error('数据获取失败:', error);
   }
 };
-
+const PostDetail=(id)=>{
+	console.log(id)
+	router.push('/forum/post/'+id)
+}
 // 初始化时加载数据
 onMounted(() => {
   fetchData();
